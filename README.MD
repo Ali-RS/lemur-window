@@ -6,6 +6,7 @@ An implementation of windows using the Lemur framework.
 - Minimize, Maximize and Close TitleBar buttons.
 - Close button can be overridden with the `boolean windowClosing()` event.
 - Built-In Dialog functions.
+- Automatic z-indexing.
 
 The test class outlines all of these abilities.
 
