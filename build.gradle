@@ -16,10 +16,13 @@ java {
     withJavadocJar()
 }
 
+sourceCompatibility = '1.8'
+
 group 'com.jayfella'
-version '1.0.0'
+version '1.0.1'
 
 repositories {
+    mavenLocal()
     jcenter()
 }
 
@@ -33,5 +36,6 @@ dependencies {
     implementation "org.codehaus.groovy:groovy-all:3.0.3"
 
     compileOnly "org.jetbrains:annotations:19.0.0"
+    compileOnly "com.jayfella:lemur-themer:0.0.2"
 
 }
