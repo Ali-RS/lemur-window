@@ -33,7 +33,8 @@ public class TestWindowManager extends SimpleApplication {
         BaseStyles.loadGlassStyle();
         GuiGlobals.getInstance().getStyles().setDefaultStyle(BaseStyles.GLASS);
 
-        SimpleWindowManager windowManager = new SimpleWindowManager(this);
+        SimpleWindowManager windowManager = new SimpleWindowManager();
+        stateManager.attach(windowManager);
 
         // stagger the windows so it looks pretty.
         // if we don't set a location they are centered automatically.
