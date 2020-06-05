@@ -2,40 +2,45 @@ package com.jayfella.lemur.window;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.BaseAppState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.simsilica.lemur.event.PopupState;
 import org.jetbrains.annotations.NotNull;
 
-public class SimpleWindowManager implements WindowManager {
+public class SimpleWindowManager extends BaseAppState implements WindowManager {
 
-    private final Application app;
     private final WindowList windowList;
-
-    private final Node guiNode;
+    private Node guiNode;
 
     /**
      * Create a new Window Manager with a starting Z Order of ZERO.
-     *
-     * @param app the jMonkey Application.
      */
-    public SimpleWindowManager(Application app) {
-        this(app, 0);
+    public SimpleWindowManager() {
+        this(0);
     }
 
     /**
      * Create a new Window Manager with a starting Z Order
      *
-     * @param app         the jMonkey Application.
      * @param startZOrder the minimum z order of the windows.
      */
-    public SimpleWindowManager(Application app, int startZOrder) {
-        this.app = app;
-        this.guiNode = ((SimpleApplication)app).getGuiNode();
-
+    public SimpleWindowManager(int startZOrder) {
         windowList = new WindowList(startZOrder);
+    }
 
-        app.getStateManager().attach(new WindowUpdaterState(this));
+    @Override
+    protected void initialize(Application app) {
+        this.guiNode = ((SimpleApplication)app).getGuiNode();
+    }
+
+    @Override protected void cleanup(Application app) { }
+    @Override protected void onEnable() { }
+    @Override protected void onDisable() { }
+
+    @Override
+    public void update(float tpf) {
+        windowList.executeWindowUpdateLoops(tpf);
     }
 
     WindowList getWindowList() {
@@ -43,13 +48,8 @@ public class SimpleWindowManager implements WindowManager {
     }
 
     @Override
-    public @NotNull Application getApplication() {
-        return app;
-    }
-
-    @Override
-    public @NotNull
-    Window add(@NotNull Window window) {
+    @NotNull
+    public Window add(@NotNull Window window) {
 
         window.setWindowManager(this);
         windowList.add(window);
@@ -99,19 +99,19 @@ public class SimpleWindowManager implements WindowManager {
         dialog.setWindowManager(this);
 
         dialog.getDialogPanel().setLocalTranslation(
-                app.getCamera().getWidth() * 0.5f - dialog.getDialogPanel().getPreferredSize().x * 0.5f,
-                app.getCamera().getHeight() * 0.5f + dialog.getDialogPanel().getPreferredSize().y,
+                getApplication().getCamera().getWidth() * 0.5f - dialog.getDialogPanel().getPreferredSize().x * 0.5f,
+                getApplication().getCamera().getHeight() * 0.5f + dialog.getDialogPanel().getPreferredSize().y,
                 1
         );
 
-        PopupState popupState = app.getStateManager().getState(PopupState.class);
+        PopupState popupState = getApplication().getStateManager().getState(PopupState.class);
         popupState.showModalPopup(dialog.getDialogPanel(), new ColorRGBA(0.2f, 0.2f, 0.2f, 0.8f));
 
     }
 
     @Override
     public void closeDialog(@NotNull Dialog dialog) {
-        PopupState popupState = app.getStateManager().getState(PopupState.class);
+        PopupState popupState = getApplication().getStateManager().getState(PopupState.class);
         popupState.closePopup(dialog.getDialogPanel());
     }
 
