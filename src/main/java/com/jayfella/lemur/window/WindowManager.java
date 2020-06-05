@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface WindowManager {
 
-    @NotNull Application getApplication();
+    Application getApplication();
 
     @NotNull
     Window add(@NotNull Window window);
